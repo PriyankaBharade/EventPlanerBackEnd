@@ -18,7 +18,12 @@ const db = require('../../dbconnection/SqlConnector')
 
 
 async function getAllVenues(req,res){
-    const result = await db.query('select * from venues')
+    var result;
+    if(req.body.searchString){
+        result = await db.query("select * from VENUES where venue_name like "+ `"${req.body.searchString}%"`)
+    }else{
+        result = await db.query('select * from venues')
+    }
     var data
     if(result){
         if(result[0]){
@@ -96,7 +101,7 @@ async function getVenueById(req,res){
 }
 
 
-userRouter.get('/getAllVenues',getAllVenues)
+userRouter.post('/getAllVenues',getAllVenues)
 
 userRouter.post('/createVenue',createVenue)
 
